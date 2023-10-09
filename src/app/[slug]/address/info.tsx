@@ -1,3 +1,4 @@
+import Now from "./now";
 export default async function Info({ params }: { params: { slug: string } }) {
   const data = await getData(params.slug);
   return (
@@ -8,6 +9,7 @@ export default async function Info({ params }: { params: { slug: string } }) {
           <p>{data.response.registration.message}</p>
           <p>{data.response.verification.message}</p>
           <code>{JSON.stringify(data.response.registration)}</code>
+          <Info params={params} />
         </div>
       )}
     </div>
