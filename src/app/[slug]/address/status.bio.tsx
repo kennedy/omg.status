@@ -1,23 +1,29 @@
+import rehypeSanitize from "rehype-sanitize";
+import rehypeStringify from "rehype-stringify";
+import remarkHtml from "remark-html";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
+import { remark } from "remark";
+import html from "remark-html";
+
 export default async function StatusBio({ params }: { params: { slug: string } }) {
-    const data = await getData(params.slug);
-    var latest = data.response.statuses[0]
-    var latest_time = new Date(0)
-    latest_time.setUTCSeconds(latest.created)
-    return (
-      <div>
-        <h2>Latest Status</h2>
-        <p>{latest_time.toLocaleString()}</p>
-        <p>{latest.emoji}</p>
-        <p>{latest.content}</p>
-      </div>
-    );
-  }
-  
-  async function getData(address: string) {
-    const res = await fetch(`https://api.omg.lol/address/${address}/statuses`, { cache: "force-cache" });
-    // if (!res.ok) {
-    //   throw new Error("Failed to fetch data!");
-    // }
-    return res.json();
-  }
-  
+  const data = await getData(params.slug);
+  const processedContent = await remark().use(html).process(data.response.bio);
+  const contentHtml = processedContent.toString();
+
+  return (
+    <>
+      {data.request.success && (
+        <Layout>
+          <div dangerouslySetInnerHTML={{ __html: contentHtml }}></div>
+        </Layout>
+      )}
+    </>
+  );
+}
+
+async function getData(address: string) {
+  const res = await fetch(`https://api.omg.lol/address/${address}/statuses/bio`, { cache: "force-cache" });
+  return res.json();
+}
