@@ -1,18 +1,24 @@
 import Now from "./now";
+import StatusLatest from "./status.latest";
+import StatusBio from "./status.bio";
 export default async function Info({ params }: { params: { slug: string } }) {
   const data = await getData(params.slug);
   return (
-    <div>
+    <>
       {data.request.success && (
-        <div>
-          <p>{data.response.expiration.message}</p>
-          <p>{data.response.registration.message}</p>
-          <p>{data.response.verification.message}</p>
-          <code>{JSON.stringify(data.response.registration)}</code>
-          <Info params={params} />
-        </div>
+        <>
+          <div>
+            <h2>Info</h2>
+            <p>{data.response.registration.message}</p>
+            <p>{data.response.expiration.message}</p>
+            <p>{data.response.verification.message}</p>
+            <code>{JSON.stringify(data.response.registration)}</code>
+          </div>
+          <StatusLatest params={params} />
+          <StatusBio params={params} />
+        </>
       )}
-    </div>
+    </>
   );
 }
 

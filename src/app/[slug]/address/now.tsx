@@ -2,6 +2,7 @@ export default async function Now({ params }: { params: { slug: string } }) {
   const data = await getData(params.slug);
   return (
     <div>
+      <h2>Now</h2>
       <p>{data.response.message}</p>
       <p>{data.response.now.content}</p>
       <p>{data.response.now.updated}</p>
