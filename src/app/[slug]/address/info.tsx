@@ -1,6 +1,7 @@
 import Now from "./now";
 import StatusLatest from "./status.latest";
 import StatusBio from "./status.bio";
+import WeblogLatest from "./weblog.latest";
 export default async function Info({ params }: { params: { slug: string } }) {
   const data = await getData(params.slug);
   return (
@@ -16,6 +17,7 @@ export default async function Info({ params }: { params: { slug: string } }) {
           </div>
           <StatusLatest params={params} />
           <StatusBio params={params} />
+          <WeblogLatest params={params}/>
         </>
       )}
     </>

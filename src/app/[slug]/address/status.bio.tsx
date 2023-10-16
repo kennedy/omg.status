@@ -9,15 +9,22 @@ import html from "remark-html";
 
 export default async function StatusBio({ params }: { params: { slug: string } }) {
   const data = await getData(params.slug);
-  const processedContent = await remark().use(html).process(data.response.bio);
+  const processedContent = await unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeSanitize)
+    .use(rehypeStringify)
+    .process(data.response.bio);
   const contentHtml = processedContent.toString();
 
   return (
     <>
       {data.request.success && (
-        <Layout>
-          <div dangerouslySetInnerHTML={{ __html: contentHtml }}></div>
-        </Layout>
+        <>
+          <h2>{data.response.message}</h2>
+          <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+          <div>{contentHtml}</div>
+        </>
       )}
     </>
   );
